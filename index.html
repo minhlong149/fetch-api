@@ -9,14 +9,45 @@
   </head>
 
   <body>
-    <form id="form" method="post">
-      <input type="text" id="meme-id" placeholder="Meme ID" />
-      <input type="text" id="meme-top-text" placeholder="Top text" />
-      <input type="text" id="meme-bottom-text" placeholder="Bottom text" />
+    <main>
+      <div id="container"></div>
+      <div id="create-meme">
+        <form id="form" method="post">
+          <div class="form">
+            <label for="id">Meme ID: </label>
+            <input id="meme-id" placeholder="Meme ID" name="id" type="text" />
+          </div>
 
-      <input type="submit" value="Add" />
-    </form>
-    <div id="container"></div>
+          <div class="form">
+            <label for="first-text">Enter the first text: </label>
+            <input
+              id="meme-top-text"
+              placeholder="First text"
+              name="first-text"
+              type="text"
+            />
+          </div>
+
+          <div class="form">
+            <label for="second-text">Enter the second text: </label>
+            <input
+              id="meme-bottom-text"
+              placeholder="Second text"
+              name="name"
+              type="text"
+            />
+          </div>
+
+          <div class="form"><input type="submit" value="Create" /></div>
+        </form>
+
+        <div class="meme-result">
+          <a href="" id="created-link" target="_blank">
+            <img src="" id="created-image" alt="" />
+          </a>
+        </div>
+      </div>
+    </main>
     <script src="./index.js"></script>
   </body>
 </html>
