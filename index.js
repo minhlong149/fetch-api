@@ -1,51 +1,30 @@
 // API documentation: https://imgflip.com/api
 
-// List of meme ID for testing:
-// https://imgflip.com/popular_meme_ids
-
 // SET GET REQUEST USING PROMISE
 
 function getMemes() {
   const getURL = "https://api.imgflip.com/get_memes";
-  console.log(`Send GET request to ${getURL}`);
+  console.log(`📨 Gửi GET request đến ${getURL}`);
+
   fetch(getURL)
-    .then((response) => response.json())
+    .then((response) => {
+      console.log("Kết quả trả về:", response);
+      return response.json();
+    })
     .then((data) => {
-      const memes = data.data.memes.filter((meme) => meme.box_count <= 2);
-      memes.forEach((meme) => {
-        addMeme(meme);
-      });
-      console.log(`${memes.length} memes added to the page`);
+      console.log("Dữ liệu chúng ta cần:", data);
+      showMemes(data);
+    })
+    .then(() => {
+      console.log(`🎉 Ảnh meme được thêm thành công:`);
     })
     .catch((error) => {
       console.log(error);
     });
-}
 
-function addMeme({ name, url, id }) {
-  const image = document.createElement("img");
-  image.src = url;
-  image.alt = name;
-  image.loading = "lazy";
-
-  const caption = document.createElement("figcaption");
-  caption.textContent = name;
-
-  const newMeme = document.createElement("figure");
-  newMeme.appendChild(image);
-  newMeme.appendChild(caption);
-
-  newMeme.addEventListener("click", () => {
-    console.log(`Selected meme ${id}: ${name}`);
-    const templateID = document.getElementById("meme-id");
-    templateID.value = id;
-
-    const page_url = "";
-    updateMeme({ url, page_url });
-  });
-
-  const container = document.getElementById("container");
-  container.appendChild(newMeme);
+  console.log(
+    "🍵 Trong khi lấy dữ liệu, chương trình tiếp tục thực thi các câu lệnh phía dưới"
+  );
 }
 
 getMemes();
@@ -70,10 +49,13 @@ async function createMeme() {
   try {
     const postURL = getMemeURL();
     console.log("Sending POST request...");
+
     const response = await fetch(postURL, {
       method: "POST",
       mode: "cors",
     });
+
+    console.log("thuc thi");
     return response.json();
   } catch (error) {
     console.log(error);
@@ -113,3 +95,36 @@ const Authorization = {
   username: "romp-nesm-sic",
   password: "45syN593",
 };
+
+function showMemes(data) {
+  const memes = data.data.memes.filter((meme) => meme.box_count <= 2);
+  memes.forEach((meme) => {
+    addMeme(meme);
+  });
+}
+
+function addMeme({ name, url, id }) {
+  const image = document.createElement("img");
+  image.src = url;
+  image.alt = name;
+  image.loading = "lazy";
+
+  const caption = document.createElement("figcaption");
+  caption.textContent = name;
+
+  const newMeme = document.createElement("figure");
+  newMeme.appendChild(image);
+  newMeme.appendChild(caption);
+
+  newMeme.addEventListener("click", () => {
+    console.log(`Selected meme ${id}: ${name}`);
+    const templateID = document.getElementById("meme-id");
+    templateID.value = id;
+
+    const page_url = "";
+    updateMeme({ url, page_url });
+  });
+
+  const container = document.getElementById("container");
+  container.appendChild(newMeme);
+}
