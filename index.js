@@ -13,7 +13,7 @@ function getMemes() {
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
       }
-      
+
       return response.json();
     })
     .then((data) => {
@@ -37,7 +37,7 @@ getMemes();
 // SEND POST REQUEST USING ASYNC/AWAIT
 
 // Uncomment this before continue
-hideForm();
+// hideForm();
 
 async function createMeme(postURL) {
   try {
@@ -121,6 +121,7 @@ const Authorization = {
 
 function showMemes(data) {
   const memes = data.data.memes;
+  shuffleArray(memes);
   memes.forEach((meme) => {
     addMeme(meme);
   });
@@ -157,4 +158,11 @@ function addMeme({ name, url, id }) {
 function hideForm() {
   const inpt = document.getElementById("create-meme");
   inpt.style.display = "none";
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 }
