@@ -9,6 +9,11 @@ function getMemes() {
   fetch(getURL)
     .then((response) => {
       console.log("Kết quả trả về:", response);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+      
       return response.json();
     })
     .then((data) => {
@@ -16,7 +21,7 @@ function getMemes() {
       showMemes(data);
     })
     .then(() => {
-      console.log(`🎉 Ảnh meme được thêm thành công:`);
+      console.log(`🎉 Ảnh meme được thêm thành công!`);
     })
     .catch((error) => {
       console.log(error);
@@ -31,36 +36,52 @@ getMemes();
 
 // SEND POST REQUEST USING ASYNC/AWAIT
 
-const form = document.getElementById("form");
-form.addEventListener("submit", async (event) => {
-  try {
-    event.preventDefault();
-    const { data, success, error_message } = await createMeme();
-    if (success) {
-      updateMeme(data);
-      console.log("Create meme succeed!");
-    } else throw Error(error_message);
-  } catch (error) {
-    console.log(error);
-  }
-});
+// Uncomment this before continue
+hideForm();
 
-async function createMeme() {
+async function createMeme(postURL) {
   try {
-    const postURL = getMemeURL();
-    console.log("Sending POST request...");
+    console.log(`📨 Gửi POST request đến ${postURL}`);
 
     const response = await fetch(postURL, {
       method: "POST",
-      mode: "cors",
     });
+    console.log("Kết quả trả về:", response);
 
-    console.log("thuc thi");
-    return response.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+
+    // response.json() returns a promise
+    // so you have to wait for the JSON
+    const data = await response.json();
+    console.log("Dữ liệu chúng ta cần:", data);
+
+    return data;
   } catch (error) {
     console.log(error);
   }
 }
+
+const form = document.getElementById("form");
+form.addEventListener("submit", async (event) => {
+  try {
+    event.preventDefault();
+    console.log("Người dùng đã ấn chọn tạo form!");
+
+    const postURL = getMemeURL();
+    const { data, success, error_message } = await createMeme(postURL);
+
+    if (success) {
+      updateMeme(data);
+      console.log("🎉 Meme được tạo thành công!");
+    } else {
+      throw Error(error_message);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 function getMemeURL() {
   const templateID = document.getElementById("meme-id").value;
@@ -83,6 +104,8 @@ function getMemeURL() {
   return postURL;
 }
 
+// UTILS ****************************************
+
 function updateMeme({ url, page_url }) {
   const image = document.getElementById("created-image");
   image.src = url;
@@ -97,7 +120,7 @@ const Authorization = {
 };
 
 function showMemes(data) {
-  const memes = data.data.memes.filter((meme) => meme.box_count <= 2);
+  const memes = data.data.memes;
   memes.forEach((meme) => {
     addMeme(meme);
   });
@@ -113,11 +136,13 @@ function addMeme({ name, url, id }) {
   caption.textContent = name;
 
   const newMeme = document.createElement("figure");
+  newMeme.id = id;
+
   newMeme.appendChild(image);
   newMeme.appendChild(caption);
 
   newMeme.addEventListener("click", () => {
-    console.log(`Selected meme ${id}: ${name}`);
+    console.log(`Bạn đã chọn meme ${name}, ID là ${id}`);
     const templateID = document.getElementById("meme-id");
     templateID.value = id;
 
@@ -127,4 +152,9 @@ function addMeme({ name, url, id }) {
 
   const container = document.getElementById("container");
   container.appendChild(newMeme);
+}
+
+function hideForm() {
+  const inpt = document.getElementById("create-meme");
+  inpt.style.display = "none";
 }

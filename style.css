@@ -33,13 +33,13 @@ main {
   display: flex;
   flex-wrap: wrap;
 
-  max-width: 60%;
+  /* max-width: 60%; */
   max-height: 100vh;
   overflow-y: scroll;
 }
 
 #create-meme {
-  width: 100%;
+  min-width: 40%;
   display: flex;
   flex-direction: column;
   align-items: center;
