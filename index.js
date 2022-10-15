@@ -37,14 +37,19 @@ getMemes();
 // SEND POST REQUEST USING ASYNC/AWAIT
 
 // Comment this before continue
-hideForm();
+// hideForm();
 
-async function createMeme(postURL) {
+async function createMeme() {
   try {
+    const postURL = "https://api.imgflip.com/caption_image";
     console.log(`📨 Gửi POST request đến ${postURL}`);
 
     const response = await fetch(postURL, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+      },
+      body: new URLSearchParams(getInputParameters()),
     });
     console.log("Kết quả trả về:", response);
 
@@ -67,8 +72,7 @@ form.addEventListener("submit", async (event) => {
     event.preventDefault();
     console.log("Người dùng đã ấn chọn tạo form!");
 
-    const postURL = getMemeURL();
-    const { data, success, error_message } = await createMeme(postURL);
+    const { data, success, error_message } = await createMeme();
 
     if (success) {
       updateMeme(data);
@@ -87,19 +91,20 @@ function getMemeURL() {
   const bottomText = document.getElementById("meme-bottom-text").value;
 
   return `https://api.imgflip.com/caption_image?template_id=${templateID}&text0=${topText}&text1=${bottomText}&username=${Authorization.username}&password=${Authorization.password}`;
+}
 
-  const parameters = {
+function getInputParameters() {
+  const templateID = document.getElementById("meme-id").value;
+  const topText = document.getElementById("meme-top-text").value;
+  const bottomText = document.getElementById("meme-bottom-text").value;
+
+  return {
     template_id: templateID,
     text0: topText,
     text1: bottomText,
     username: Authorization.username,
     password: Authorization.password,
   };
-
-  const postURL = new URL("https://api.imgflip.com/caption_image");
-  postURL.search = new URLSearchParams(parameters).toString();
-
-  return postURL;
 }
 
 // UTILS ****************************************
@@ -166,4 +171,3 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-
