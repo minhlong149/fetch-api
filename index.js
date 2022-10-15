@@ -36,8 +36,8 @@ getMemes();
 
 // SEND POST REQUEST USING ASYNC/AWAIT
 
-// Uncomment this before continue
-// hideForm();
+// Comment this before continue
+hideForm();
 
 async function createMeme(postURL) {
   try {
@@ -52,8 +52,6 @@ async function createMeme(postURL) {
       throw new Error(`HTTP error: ${response.status}`);
     }
 
-    // response.json() returns a promise
-    // so you have to wait for the JSON
     const data = await response.json();
     console.log("Dữ liệu chúng ta cần:", data);
 
@@ -88,7 +86,7 @@ function getMemeURL() {
   const topText = document.getElementById("meme-top-text").value;
   const bottomText = document.getElementById("meme-bottom-text").value;
 
-  // return `https://api.imgflip.com/caption_image?template_id=${templateID}&text0=${topText}&text1=${bottomText}&username=${Authorization.username}&password=${Authorization.password}`;
+  return `https://api.imgflip.com/caption_image?template_id=${templateID}&text0=${topText}&text1=${bottomText}&username=${Authorization.username}&password=${Authorization.password}`;
 
   const parameters = {
     template_id: templateID,
@@ -105,19 +103,6 @@ function getMemeURL() {
 }
 
 // UTILS ****************************************
-
-function updateMeme({ url, page_url }) {
-  const image = document.getElementById("created-image");
-  image.src = url;
-
-  const anchor = document.getElementById("created-link");
-  anchor.href = page_url;
-}
-
-const Authorization = {
-  username: "romp-nesm-sic",
-  password: "45syN593",
-};
 
 function showMemes(data) {
   const memes = data.data.memes;
@@ -147,13 +132,28 @@ function addMeme({ name, url, id }) {
     const templateID = document.getElementById("meme-id");
     templateID.value = id;
 
-    const page_url = "";
+    const page_url = "#";
     updateMeme({ url, page_url });
   });
 
   const container = document.getElementById("container");
   container.appendChild(newMeme);
 }
+
+function updateMeme({ url, page_url }) {
+  const image = document.getElementById("created-image");
+  image.src = url;
+
+  const anchor = document.getElementById("created-link");
+  anchor.href = page_url;
+}
+
+// OTHERS ***************************************
+
+const Authorization = {
+  username: "romp-nesm-sic",
+  password: "45syN593",
+};
 
 function hideForm() {
   const inpt = document.getElementById("create-meme");
@@ -166,3 +166,4 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
+
