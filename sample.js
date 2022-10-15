@@ -63,21 +63,19 @@ getMemes().then(() => {
 
 // Catching errors
 
-function getMeme() {
-  fetch("https://api.imgflip.com/get_memes")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("⚠️");
-      }
-      return response.json();
-    })
-    .then((data) => showMemes(data))
-    .catch((error) => console.log(error));
-}
+fetch("https://api.imgflip.com/get_memes")
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("⚠️");
+    }
+    return response.json();
+  })
+  .then((data) => showMemes(data))
+  .catch((error) => console.log(error));
 
 // POST
 
-fetch("https://example.com/profile", {
+fetch("https://example.com/profile?username=alex", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -85,15 +83,8 @@ fetch("https://example.com/profile", {
   body: JSON.stringify({ username: "alex" }),
 })
   .then((response) => response.json())
-  .then((data) => console.log("👌"))
-  .catch((error) => console.error("❌"));
-
-fetch("https://example.com/profile?username=alex", {
-  method: "POST",
-})
-  .then((response) => response.json())
-  .then((data) => console.log("👌"))
-  .catch((error) => console.error("❌"));
+  .then((data) => console.log(data))
+  .catch((error) => console.log(error));
 
 function createMemeA(url) {
   fetch(url, { method: "POST" })
@@ -154,7 +145,7 @@ async function createMeme(url) {
       throw new Error("⚠️");
     }
     const data = await response.json();
-    return data;
+    console.log(data);
   } catch (error) {
     console.log(error);
   }

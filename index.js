@@ -24,7 +24,7 @@ function getMemes() {
       console.log(`🎉 Ảnh meme được thêm thành công!`);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
     });
 
   console.log(
@@ -41,7 +41,9 @@ getMemes();
 
 async function createMeme() {
   try {
+    // const postURL =  getMemeURL();
     const postURL = "https://api.imgflip.com/caption_image";
+
     console.log(`📨 Gửi POST request đến ${postURL}`);
 
     const response = await fetch(postURL, {
@@ -54,15 +56,16 @@ async function createMeme() {
     console.log("Kết quả trả về:", response);
 
     if (!response.ok) {
-      throw new Error(`HTTP error: ${response.status}`);
+      Promise.reject(`HTTP error: ${response.status}`);
     }
 
     const data = await response.json();
     console.log("Dữ liệu chúng ta cần:", data);
 
-    return data;
+    return Promise.resolve(data);
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    Promise.reject(error);
   }
 }
 
@@ -73,15 +76,13 @@ form.addEventListener("submit", async (event) => {
     console.log("Người dùng đã ấn chọn tạo form!");
 
     const { data, success, error_message } = await createMeme();
-
-    if (success) {
-      updateMeme(data);
-      console.log("🎉 Meme được tạo thành công!");
-    } else {
+    if (!success) {
       throw Error(error_message);
     }
+    updateMeme(data);
+    console.log("🎉 Meme được tạo thành công!");
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 });
 
@@ -152,8 +153,6 @@ function updateMeme({ url, page_url }) {
   const anchor = document.getElementById("created-link");
   anchor.href = page_url;
 }
-
-// OTHERS ***************************************
 
 const Authorization = {
   username: "romp-nesm-sic",
