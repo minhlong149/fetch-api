@@ -10,9 +10,8 @@ xhr.onload = function () {
 };
 
 // Fetch API Intro
-const url = "https://example.com/some/url";
-
-url.then((response) => response.json()).then((data) => console.log(data));
+const memes = fetch("https://api.imgflip.com/get_memes");
+console.log(memes.data);
 
 // The trouble with long-running synchronous functions
 
